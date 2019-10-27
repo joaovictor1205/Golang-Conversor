@@ -18,8 +18,6 @@ func converter(data string) string {
 
 	hexa := hex.EncodeToString(b64)
 
-	fmt.Println(hexa)
-
 	return hexa
 
 }
@@ -46,25 +44,23 @@ func base64ToObject(information string) {
 	position_2 := string(information[2])
 	position_3 := string(information[3])
 	position_4 := string(information[4])
-	position_5 := string(information[5])
-	position_6 := string(information[6])
-	position_7 := string(information[7])
+	//position_5 := string(information[5])
+	//position_6 := string(information[6])
+	//position_7 := string(information[7])
 	position_8 := string(information[8])
 	position_9 := string(information[9])
 	position_10 := string(information[10])
 	position_11 := string(information[11])
-	position_12 := string(information[12])
-	position_13 := string(information[13])
-	position_14 := string(information[14])
-	position_15 := string(information[15])
+	//position_12 := string(information[12])
+	//position_13 := string(information[13])
+	//position_14 := string(information[14])
+	//position_15 := string(information[15])
 	position_16 := string(information[16])
 	position_17 := string(information[17])
 	position_18 := string(information[18])
 	position_19 := string(information[19])
-	position_20 := string(information[20])
-	position_21 := string(information[21])
-
-	fmt.Println(position_0, position_1, position_2, position_3, position_4, position_5, position_6, position_7, position_8, position_9, position_10, position_11, position_12, position_13, position_14, position_15, position_16, position_17, position_18, position_19, position_20, position_21)
+	//position_20 := string(information[20])
+	//position_21 := string(information[21])
 
 	if position_0 == "0" && position_1 == "0" {
 		chanel_value_1 = 0
@@ -96,10 +92,6 @@ func base64ToObject(information string) {
 	int_value_1, _ := strconv.ParseUint(string(hexa_to_string_1), 16, 32) // STRING FOR INT64
 	first_sensor_value = float64(int_value_1) * 0.1
 
-	fmt.Println("Chanel: ", chanel_value_1)
-	fmt.Println("Sensor Type: ", type_string_1)
-	fmt.Println("Sensor Value: ", first_sensor_value)
-
 	if position_8 == "0" && position_9 == "0" {
 		chanel_value_2 = 0
 	} else if position_8 == "0" && position_9 == "1" {
@@ -129,10 +121,6 @@ func base64ToObject(information string) {
 	hexa_to_string_2, _ := hex.DecodeString(sensor_hexa_value_2)          // HEXA FOR STRING
 	int_value_2, _ := strconv.ParseUint(string(hexa_to_string_2), 16, 32) // STRING FOR INT64
 	second_sensor_value = float64(int_value_2) * 0.1
-
-	fmt.Println("Chanel: ", chanel_value_2)
-	fmt.Println("Sensor Type: ", type_string_2)
-	fmt.Println("Sensor Value: ", second_sensor_value)
 
 	if position_16 == "0" && position_17 == "0" {
 		chanel_value_3 = 0
@@ -164,11 +152,16 @@ func base64ToObject(information string) {
 	int_value_3, _ := strconv.ParseUint(string(hexa_to_string_3), 16, 32) // STRING FOR INT64
 	third_sensor_value = float64(int_value_3) * 0.5
 
-	fmt.Println("Chanel: ", chanel_value_3)
-	fmt.Println("Sensor Type: ", type_string_3)
-	fmt.Println("Sensor Value: ", third_sensor_value)
-
+	fmt.Println("[")
 	fmt.Printf(`{"Chanel One"`+": "+"%d,\n"+`"Sensor One Type"`+": "+`"`+"%s"+`"`+",\n"+`"Sensor One Value"`+": "+"%.1f}\n", chanel_value_1, type_string_1, first_sensor_value)
+	fmt.Print(",")
+	fmt.Print("\n")
+	fmt.Printf(`{"Chanel Two"`+": "+"%d,\n"+`"Sensor Two Type"`+": "+`"`+"%s"+`"`+",\n"+`"Sensor Two Value"`+": "+"%.1f}\n", chanel_value_2, type_string_2, second_sensor_value)
+	fmt.Print(",")
+	fmt.Print("\n")
+	fmt.Printf(`{"Chanel Three"`+": "+"%d,\n"+`"Sensor Three Type"`+": "+`"`+"%s"+`"`+",\n"+`"Sensor Three Value"`+": "+"%.1f}\n", chanel_value_3, type_string_3, third_sensor_value)
+	fmt.Println("]")
+
 }
 
 func main() {
