@@ -5,7 +5,9 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
+	"time"
 )
 
 func converter(data string) string {
@@ -22,7 +24,7 @@ func converter(data string) string {
 
 }
 
-func base64ToObject(information string) {
+func objectToJson(information string) {
 
 	var type_string_1 string
 	var chanel_value_1 int
@@ -73,7 +75,8 @@ func base64ToObject(information string) {
 	}
 
 	if chanel_value_1 == -1 {
-		log.Println("Error")
+		fmt.Println("Error on Chanel")
+		os.Exit(-1)
 	}
 
 	if position_2 == "7" && position_3 == "3" {
@@ -84,6 +87,8 @@ func base64ToObject(information string) {
 		type_string_1 = "Humidity"
 	} else {
 		type_string_1 = "Error"
+		os.Exit(-1)
+		fmt.Println("Error on Sensor Type")
 	}
 
 	sensor_value_1 = string(information[4:8])
@@ -103,7 +108,8 @@ func base64ToObject(information string) {
 	}
 
 	if chanel_value_2 == -1 {
-		log.Println("Error")
+		fmt.Println("Error on Chanel")
+		os.Exit(-1)
 	}
 
 	if position_10 == "7" && position_11 == "3" {
@@ -114,6 +120,8 @@ func base64ToObject(information string) {
 		type_string_2 = "Humidity"
 	} else {
 		type_string_2 = "Error"
+		os.Exit(-1)
+		fmt.Println("Error on Sensor Type")
 	}
 
 	sensor_value_2 = string(information[12:16])
@@ -144,6 +152,8 @@ func base64ToObject(information string) {
 		type_string_3 = "Humidity"
 	} else {
 		type_string_3 = "Error"
+		os.Exit(-1)
+		fmt.Println("Error on Sensor Type")
 	}
 
 	sensor_value_3 = string(information[20:22])
@@ -167,11 +177,14 @@ func base64ToObject(information string) {
 func main() {
 
 	var base string
+	var value string
 
 	fmt.Print("Insert Base64 information: ")
 	fmt.Scan(&base)
 
-	value := converter(base)
-	base64ToObject(value)
+	value = converter(base)
+	go objectToJson(value)
 
+	time.Sleep(time.Millisecond)
+	fmt.Println("Finishing Go Routine")
 }
