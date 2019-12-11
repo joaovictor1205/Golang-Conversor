@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"time"
 )
 
 func converter(data string) string {
@@ -23,16 +22,7 @@ func converter(data string) string {
 
 }
 
-func receive_hexa(value string) {
-	for i := 0; i < len(value); i++{
-		fmt.Println(string(value[i]))
-	}
-	
-	chanel_value_test := chanelValue(string(value[0]), string(value[1]))
-	fmt.Println("Chanel Value: ",chanel_value_test)
-}
-
-func objectToJson(information string) {
+func objectToJson(information string, finishingRoutine chan string) {
 
 	var type_string_1 string
 	var chanel_value_1 int
@@ -66,26 +56,21 @@ func objectToJson(information string) {
 	chanel_value_1 = chanelValue(position_0, position_1)
 	type_string_1 = sensorType(position_2, position_3)
 	sensor_value_1 = string(information[4:8])
-	first_sensor_value = sensorConversion(sensor_value_1)
+	first_sensor_value = sensorConversion(sensor_value_1, type_string_1)
 	//////////////////////////////////////////////////////////////////////
 
 	////////////////////// SECOND SENSOR INFORMATION ////////////////////
 	chanel_value_2 = chanelValue(position_8, position_9)
 	type_string_2 = sensorType(position_10, position_11)
 	sensor_value_2 = string(information[12:16])
-	second_sensor_value = sensorConversion(sensor_value_2)
+	second_sensor_value = sensorConversion(sensor_value_2, type_string_2)
 	////////////////////////////////////////////////////////////////////
 	
 	////////////////// THIRDY SENSOR INFORMATION ///////////////////////
 	chanel_value_3 = chanelValue(position_16, position_17)
 	type_string_3 = sensorType(position_18, position_19)
-
 	sensor_value_3 = string(information[20:22])
-	if type_string_3 == "Humidity" {
-		third_sensor_value = sensorConversionHumidity(sensor_value_3)
-	} else {
-		third_sensor_value = sensorConversion(sensor_value_3)
-	}
+	third_sensor_value = sensorConversion(sensor_value_3, type_string_3)
 	////////////////////////////////////////////////////////////////////
 
 	////////////// CREATING JSON WITH SENSOR INFORMATIONS //////////////
@@ -93,6 +78,8 @@ func objectToJson(information string) {
 		chanel_value_2, type_string_2, second_sensor_value,
 		chanel_value_3, type_string_3, third_sensor_value)
 	////////////////////////////////////////////////////////////////////
+
+	finishingRoutine <- "Finishing Go Routine"
 
 }
 
@@ -140,22 +127,33 @@ func sensorType(first_parameter, second_parameter string) string {
 
 }
 
-func sensorConversion(first_parameter string) float64 {
+func sensorConversion(first_parameter string, sensor_type string) float64 {
+
+	var sensor_value float64
 
 	sensor_hexa_value_1 := hex.EncodeToString([]byte(first_parameter))    // STRING FOR HEXA
 	hexa_to_string_1, _ := hex.DecodeString(sensor_hexa_value_1)          // HEXA FOR STRING
 	int_value_1, _ := strconv.ParseUint(string(hexa_to_string_1), 16, 32) // STRING FOR INT64
-	sensor_value := float64(int_value_1) * 0.1
+	
+	switch sensor_type {
+	case "Iluminance":
+		sensor_value = float64(int_value_1) * 1
+	case "Presence":
+		sensor_value = float64(int_value_1) * 1
+	case "Temperature":
+		sensor_value = float64(int_value_1) * 0.1
+	case "Humidity":
+		sensor_value = float64(int_value_1) * 0.5
+	case "Accelerometer":
+		sensor_value = float64(int_value_1) * 0.001
+	case "Barometer":
+		sensor_value = float64(int_value_1) * 0.1
+	case "Gyrometer":
+		sensor_value = float64(int_value_1) * 0.01
+	case "GPS Location":
+		sensor_value = float64(int_value_1) * 0.0001
 
-	return sensor_value
-}
-
-func sensorConversionHumidity(first_parameter string) float64 {
-
-	sensor_hexa_value_1 := hex.EncodeToString([]byte(first_parameter))    // STRING FOR HEXA
-	hexa_to_string_1, _ := hex.DecodeString(sensor_hexa_value_1)          // HEXA FOR STRING
-	int_value_1, _ := strconv.ParseUint(string(hexa_to_string_1), 16, 32) // STRING FOR INT64
-	sensor_value := float64(int_value_1) * 0.5
+	}
 
 	return sensor_value
 }
@@ -179,13 +177,13 @@ func main() {
 
 	var base string
 	var value string
+	finishingRoutine := make(chan string)
 
 	fmt.Print("Insert Base64 information: ")
 	fmt.Scan(&base)
 
 	value = converter(base)
-	go objectToJson(value)
 
-	time.Sleep(time.Millisecond)
-	fmt.Println("Finishing Go Routine")
+	go objectToJson(value, finishingRoutine)
+	fmt.Println(<-finishingRoutine)
 }
