@@ -9,6 +9,14 @@ import (
 	"time"
 )
 
+// ILLUMINANCE SENSOR -> LPP = 101 / HEX = 65 / DATA SIZE = 2 / 1 UNSIGNED MSB
+// PRESENCE SENSOR -> LPP = 102 / HEX = 66 / DATA SIZE = 1 / 1
+// TEMPERATURE SENSOR -> LPP = 103 / HEX = 67 / DATA SIZE = 2 / 0.1 SIGNED MSB
+// HUMIDITY SENSOR -> LPP = 104 / HEX = 68 / DATA SIZE = 1 / 0.5 UNSIGNED
+// ACCELEROMETER SENSOR -> LPP = 113 / HEX = 71 / DATA SIZE = 6 / 0.001 SIGNED MSB
+// BAROMETER SENSOR -> LPP = 115 / HEX = 73 / DATA SIZE = 2 / 0.1 UNSIGNED MSB
+// GYROMETER SENSOR -> LPP = 134 / HEX = 86 / DATA SIZE = 6 / 0.01 SIGNED MSB
+
 func converter(data string) string {
 
 	encoded := base64.StdEncoding.EncodeToString([]byte(data)) // CONVERTING STRING TO BASE64
@@ -53,32 +61,41 @@ func objectToJson(information string) {
 	position_18 := string(information[18])
 	position_19 := string(information[19])
 
+	////////////// FIRST SENSOR INFORMATION //////////////
 	chanel_value_1 = chanelValue(position_0, position_1)
 	type_string_1 = sensorType(position_2, position_3)
 	sensor_value_1 = string(information[4:8])
 	first_sensor_value = sensorConversion(sensor_value_1)
+	/////////////////////////////////////////////////////
 
+	////////////// SECOND SENSOR INFORMATION //////////////
 	chanel_value_2 = chanelValue(position_8, position_9)
 	type_string_2 = sensorType(position_10, position_11)
 	sensor_value_2 = string(information[12:16])
 	second_sensor_value = sensorConversion(sensor_value_2)
-
+	/////////////////////////////////////////////////////
+	
+	////////////// THIRDY SENSOR INFORMATION //////////////
 	chanel_value_3 = chanelValue(position_16, position_17)
 	type_string_3 = sensorType(position_18, position_19)
 
 	sensor_value_3 = string(information[20:22])
 	if type_string_3 == "Humidity" {
-		third_sensor_value = sensorConversionBarometer(sensor_value_3)
+		third_sensor_value = sensorConversionHumidity(sensor_value_3)
 	} else {
 		third_sensor_value = sensorConversion(sensor_value_3)
 	}
+	/////////////////////////////////////////////////////
 
+	////////// CREATING JSON WITH SENSOR INFORMATIONS ////////////
 	createJSON(chanel_value_1, type_string_1, first_sensor_value,
 		chanel_value_2, type_string_2, second_sensor_value,
 		chanel_value_3, type_string_3, third_sensor_value)
+	//////////////////////////////////////////////////////////////
 
 }
 
+// sensor vai receber mais valores ou apenas 3 por leitura?
 func chanelValue(first_parameter, second_parameter string) int {
 
 	var chanel_value int
@@ -101,6 +118,9 @@ func chanelValue(first_parameter, second_parameter string) int {
 	return chanel_value
 }
 
+// feature -> terminar de inserir os outros tipos de sensores para
+// seus respectivos valores
+// ex.: Accelerometer = 71
 func sensorType(first_parameter, second_parameter string) string {
 
 	var type_string string
@@ -120,6 +140,9 @@ func sensorType(first_parameter, second_parameter string) string {
 	return type_string
 }
 
+// problema: temperatura e barometro multiplicam por 0.1 mas
+// humidade multiplica por 0.5
+// feature -> resolver com 1 funcao apenas
 func sensorConversion(first_parameter string) float64 {
 
 	sensor_hexa_value_1 := hex.EncodeToString([]byte(first_parameter))    // STRING FOR HEXA
@@ -130,7 +153,7 @@ func sensorConversion(first_parameter string) float64 {
 	return sensor_value
 }
 
-func sensorConversionBarometer(first_parameter string) float64 {
+func sensorConversionHumidity(first_parameter string) float64 {
 
 	sensor_hexa_value_1 := hex.EncodeToString([]byte(first_parameter))    // STRING FOR HEXA
 	hexa_to_string_1, _ := hex.DecodeString(sensor_hexa_value_1)          // HEXA FOR STRING
@@ -140,6 +163,8 @@ func sensorConversionBarometer(first_parameter string) float64 {
 	return sensor_value
 }
 
+// como melhorar essa formar de criar JSON? fazer um objeto e aplicar um
+// marshal nele?
 func createJSON(chanel_value_1 int, type_string_1 string, sensor_value_1 float64,
 	chanel_value_2 int, type_string_2 string, sensor_value_2 float64,
 	chanel_value_3 int, type_string_3 string, sensor_value_3 float64) {
@@ -166,6 +191,9 @@ func main() {
 	value = converter(base)
 	go objectToJson(value)
 
+// rotina nao pode depender do Millisecond, pq se a maquina tiver um
+// desempenho ruim 1 millisecond nao e o suficiente para a rotina terminar
+// feature -> criar um Chanel para comunicar com a Routine
 	time.Sleep(time.Millisecond)
 	fmt.Println("Finishing Go Routine")
 }
