@@ -31,6 +31,15 @@ func converter(data string) string {
 
 }
 
+func receive_hexa(value string) {
+	for i := 0; i < len(value); i++{
+		fmt.Println(string(value[i]))
+	}
+	
+	chanel_value_test := chanelValue(string(value[0]), string(value[1]))
+	fmt.Println("Chanel Value: ",chanel_value_test)
+}
+
 func objectToJson(information string) {
 
 	var type_string_1 string
@@ -95,22 +104,13 @@ func objectToJson(information string) {
 
 }
 
-// sensor vai receber mais valores ou apenas 3 por leitura?
 func chanelValue(first_parameter, second_parameter string) int {
 
-	var chanel_value int
+	chanel_value, err := strconv.Atoi(second_parameter) // FIRST PARAMETER IS ALWAYS 0 AND THE
+														// SECOND PARAMETER INDICATES THE CHANEL
+														// VALUE
 
-	if first_parameter == "0" && second_parameter == "0" {
-		chanel_value = 0
-	} else if first_parameter == "0" && second_parameter == "1" {
-		chanel_value = 1
-	} else if first_parameter == "0" && second_parameter == "2" {
-		chanel_value = 2
-	} else {
-		chanel_value = -1
-	}
-
-	if chanel_value == -1 {
+	if err != nil {
 		fmt.Println("Error on Chanel")
 		os.Exit(-1)
 	}
@@ -189,8 +189,8 @@ func main() {
 	fmt.Scan(&base)
 
 	value = converter(base)
-	go objectToJson(value)
-
+	//go objectToJson(value)
+	receive_hexa(value)
 // rotina nao pode depender do Millisecond, pq se a maquina tiver um
 // desempenho ruim 1 millisecond nao e o suficiente para a rotina terminar
 // feature -> criar um Chanel para comunicar com a Routine
