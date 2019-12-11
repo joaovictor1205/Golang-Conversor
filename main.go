@@ -9,14 +9,6 @@ import (
 	"time"
 )
 
-// ILLUMINANCE SENSOR -> LPP = 101 / HEX = 65 / DATA SIZE = 2 / 1 UNSIGNED MSB
-// PRESENCE SENSOR -> LPP = 102 / HEX = 66 / DATA SIZE = 1 / 1
-// TEMPERATURE SENSOR -> LPP = 103 / HEX = 67 / DATA SIZE = 2 / 0.1 SIGNED MSB
-// HUMIDITY SENSOR -> LPP = 104 / HEX = 68 / DATA SIZE = 1 / 0.5 UNSIGNED
-// ACCELEROMETER SENSOR -> LPP = 113 / HEX = 71 / DATA SIZE = 6 / 0.001 SIGNED MSB
-// BAROMETER SENSOR -> LPP = 115 / HEX = 73 / DATA SIZE = 2 / 0.1 UNSIGNED MSB
-// GYROMETER SENSOR -> LPP = 134 / HEX = 86 / DATA SIZE = 6 / 0.01 SIGNED MSB
-
 func converter(data string) string {
 
 	encoded := base64.StdEncoding.EncodeToString([]byte(data)) // CONVERTING STRING TO BASE64
@@ -106,9 +98,7 @@ func objectToJson(information string) {
 
 func chanelValue(first_parameter, second_parameter string) int {
 
-	chanel_value, err := strconv.Atoi(second_parameter) // FIRST PARAMETER IS ALWAYS 0 AND THE
-														// SECOND PARAMETER INDICATES THE CHANEL
-														// VALUE
+	chanel_value, err := strconv.Atoi(first_parameter + second_parameter)
 
 	if err != nil {
 		fmt.Println("Error on Chanel")
@@ -118,31 +108,38 @@ func chanelValue(first_parameter, second_parameter string) int {
 	return chanel_value
 }
 
-// feature -> terminar de inserir os outros tipos de sensores para
-// seus respectivos valores
-// ex.: Accelerometer = 71
 func sensorType(first_parameter, second_parameter string) string {
 
-	var type_string string
+	type_string, err := strconv.Atoi(first_parameter + second_parameter)
 
-	if first_parameter == "7" && second_parameter == "3" {
-		type_string = "Barometer"
-	} else if first_parameter == "6" && second_parameter == "7" {
-		type_string = "Temperature"
-	} else if first_parameter == "6" && second_parameter == "8" {
-		type_string = "Humidity"
-	} else {
-		type_string = "Error"
+	if err != nil {
+		fmt.Println("Error on Sensor")
 		os.Exit(-1)
-		fmt.Println("Error on Sensor Type")
 	}
 
-	return type_string
+	switch type_string{
+	case 65:
+		return "Illuminance"
+	case 66:
+		return "Presence"
+	case 67:
+		return "Temperature"
+	case 68:
+		return "Humidity"
+	case 71:
+		return "Accelerometer"
+	case 73:
+		return "Barometer"
+	case 86:
+		return "Gyrometer"
+	case 88:
+		return "GPS Location"
+	default:
+		return "Please verify your Sensor Type"
+	}
+
 }
 
-// problema: temperatura e barometro multiplicam por 0.1 mas
-// humidade multiplica por 0.5
-// feature -> resolver com 1 funcao apenas
 func sensorConversion(first_parameter string) float64 {
 
 	sensor_hexa_value_1 := hex.EncodeToString([]byte(first_parameter))    // STRING FOR HEXA
@@ -163,8 +160,6 @@ func sensorConversionHumidity(first_parameter string) float64 {
 	return sensor_value
 }
 
-// como melhorar essa formar de criar JSON? fazer um objeto e aplicar um
-// marshal nele?
 func createJSON(chanel_value_1 int, type_string_1 string, sensor_value_1 float64,
 	chanel_value_2 int, type_string_2 string, sensor_value_2 float64,
 	chanel_value_3 int, type_string_3 string, sensor_value_3 float64) {
@@ -189,11 +184,8 @@ func main() {
 	fmt.Scan(&base)
 
 	value = converter(base)
-	//go objectToJson(value)
-	receive_hexa(value)
-// rotina nao pode depender do Millisecond, pq se a maquina tiver um
-// desempenho ruim 1 millisecond nao e o suficiente para a rotina terminar
-// feature -> criar um Chanel para comunicar com a Routine
+	go objectToJson(value)
+
 	time.Sleep(time.Millisecond)
 	fmt.Println("Finishing Go Routine")
 }
