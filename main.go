@@ -61,21 +61,21 @@ func objectToJson(information string) {
 	position_18 := string(information[18])
 	position_19 := string(information[19])
 
-	////////////// FIRST SENSOR INFORMATION //////////////
+	///////////////////////// FIRST SENSOR INFORMATION ///////////////////
 	chanel_value_1 = chanelValue(position_0, position_1)
 	type_string_1 = sensorType(position_2, position_3)
 	sensor_value_1 = string(information[4:8])
 	first_sensor_value = sensorConversion(sensor_value_1)
-	/////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////
 
-	////////////// SECOND SENSOR INFORMATION //////////////
+	////////////////////// SECOND SENSOR INFORMATION ////////////////////
 	chanel_value_2 = chanelValue(position_8, position_9)
 	type_string_2 = sensorType(position_10, position_11)
 	sensor_value_2 = string(information[12:16])
 	second_sensor_value = sensorConversion(sensor_value_2)
-	/////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
 	
-	////////////// THIRDY SENSOR INFORMATION //////////////
+	////////////////// THIRDY SENSOR INFORMATION ///////////////////////
 	chanel_value_3 = chanelValue(position_16, position_17)
 	type_string_3 = sensorType(position_18, position_19)
 
@@ -85,13 +85,13 @@ func objectToJson(information string) {
 	} else {
 		third_sensor_value = sensorConversion(sensor_value_3)
 	}
-	/////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
 
-	////////// CREATING JSON WITH SENSOR INFORMATIONS ////////////
+	////////////// CREATING JSON WITH SENSOR INFORMATIONS //////////////
 	createJSON(chanel_value_1, type_string_1, first_sensor_value,
 		chanel_value_2, type_string_2, second_sensor_value,
 		chanel_value_3, type_string_3, third_sensor_value)
-	//////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
 
 }
 
