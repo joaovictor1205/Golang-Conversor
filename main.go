@@ -24,6 +24,11 @@ func converter(data string) string {
 
 func objectToJson(information string, finishingRoutine chan string) {
 
+	if len(string(information)) == 0 {
+		fmt.Println("ERROR! Please verify your value")
+		os.Exit(-1)
+	}
+
 	var type_string_1 string
 	var chanel_value_1 int
 	var sensor_value_1 string
@@ -39,10 +44,13 @@ func objectToJson(information string, finishingRoutine chan string) {
 	var sensor_value_3 string
 	var third_sensor_value float64
 
-	position_0 := string(information[0])
-	position_1 := string(information[1])
-	position_2 := string(information[2])
-	position_3 := string(information[3])
+	var sensor_bytes int
+
+	var position_0 string
+	var position_1 string
+	var position_2 string
+	var position_3 string
+
 	position_8 := string(information[8])
 	position_9 := string(information[9])
 	position_10 := string(information[10])
@@ -52,11 +60,21 @@ func objectToJson(information string, finishingRoutine chan string) {
 	position_18 := string(information[18])
 	position_19 := string(information[19])
 
+	for i := 0; i <= 3; i++ {
+		position_0 = string(information[0])
+		position_1 = string(information[1])
+		position_2 = string(information[2])
+		position_3 = string(information[3])
+	}
+
 	///////////////////////// FIRST SENSOR INFORMATION ///////////////////
 	chanel_value_1 = chanelValue(position_0, position_1)
 	type_string_1 = sensorType(position_2, position_3)
-	sensor_value_1 = string(information[4:8])
-	first_sensor_value = sensorConversion(sensor_value_1, type_string_1)
+	sensor_bytes = numOfBytes(type_string_1)
+	if sensor_bytes == 2 {
+		sensor_value_1 = string(information[4:8])
+		first_sensor_value = sensorConversion(sensor_value_1, type_string_1)
+	}
 	//////////////////////////////////////////////////////////////////////
 
 	////////////////////// SECOND SENSOR INFORMATION ////////////////////
@@ -65,7 +83,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 	sensor_value_2 = string(information[12:16])
 	second_sensor_value = sensorConversion(sensor_value_2, type_string_2)
 	////////////////////////////////////////////////////////////////////
-	
+
 	////////////////// THIRDY SENSOR INFORMATION ///////////////////////
 	chanel_value_3 = chanelValue(position_16, position_17)
 	type_string_3 = sensorType(position_18, position_19)
@@ -104,7 +122,7 @@ func sensorType(first_parameter, second_parameter string) string {
 		os.Exit(-1)
 	}
 
-	switch type_string{
+	switch type_string {
 	case 65:
 		return "Illuminance"
 	case 66:
@@ -134,7 +152,7 @@ func sensorConversion(first_parameter string, sensor_type string) float64 {
 	sensor_hexa_value_1 := hex.EncodeToString([]byte(first_parameter))    // STRING FOR HEXA
 	hexa_to_string_1, _ := hex.DecodeString(sensor_hexa_value_1)          // HEXA FOR STRING
 	int_value_1, _ := strconv.ParseUint(string(hexa_to_string_1), 16, 32) // STRING FOR INT64
-	
+
 	switch sensor_type {
 	case "Iluminance":
 		sensor_value = float64(int_value_1) * 1
@@ -156,6 +174,31 @@ func sensorConversion(first_parameter string, sensor_type string) float64 {
 	}
 
 	return sensor_value
+}
+
+func numOfBytes(sensor_type string) int {
+
+	switch sensor_type {
+	case "Iluminance":
+		return 2
+	case "Presence":
+		return 1
+	case "Temperature":
+		return 2
+	case "Humidity":
+		return 1
+	case "Accelerometer":
+		return 6
+	case "Barometer":
+		return 2
+	case "Gyrometer":
+		return 6
+	case "GPS Location":
+		return 9
+	default:
+		return -1
+	}
+
 }
 
 func createJSON(chanel_value_1 int, type_string_1 string, sensor_value_1 float64,
