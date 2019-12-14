@@ -70,7 +70,6 @@ func objectToJson(information string, finishingRoutine chan string) {
 	chanel_value_1 = chanelValue(position_0, position_1)
 	type_string_1 = sensorType(position_2, position_3)
 	sensor_bytes = numOfBytes(type_string_1)
-
 	if sensor_bytes == 2 {
 		sensor_value_1 = string(information[4:8])
 		first_sensor_value = sensorConversion(sensor_value_1, type_string_1)
@@ -79,6 +78,9 @@ func objectToJson(information string, finishingRoutine chan string) {
 		first_sensor_value = sensorConversion(sensor_value_1, type_string_1)
 	} else if sensor_bytes == 6 {
 		sensor_value_1 = string(information[4:16])
+		first_sensor_value = sensorConversion(sensor_value_1, type_string_1)
+	} else if sensor_bytes == 9 {
+		sensor_value_1 = string(information[4:22])
 		first_sensor_value = sensorConversion(sensor_value_1, type_string_1)
 	}
 	//////////////////////////////////////////////////////////////////////
@@ -199,6 +201,8 @@ func numOfBytes(sensor_type string) int {
 		return 2
 	case "Gyrometer":
 		return 6
+	case "GPS Location":
+		return 9
 	default:
 		return -1
 	}
