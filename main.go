@@ -16,6 +16,7 @@ type sensor struct {
 }
 
 func createSensor(NAME string, LPP_DATA_TYPE int, HEXA int, DATA_SIZE int) *sensor {
+
 	s := sensor{
 		NAME:          NAME,
 		LPP_DATA_TYPE: LPP_DATA_TYPE,
@@ -24,6 +25,7 @@ func createSensor(NAME string, LPP_DATA_TYPE int, HEXA int, DATA_SIZE int) *sens
 	}
 
 	return &s
+
 }
 
 var ILLUMINANCE_SENSOR = createSensor("Illuminance Sensor", 101, 65, 2)
