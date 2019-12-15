@@ -8,6 +8,24 @@ import (
 	"strconv"
 )
 
+type sensor struct {
+	NAME          string
+	LPP_DATA_TYPE int
+	HEXA          int
+	DATA_SIZE     int
+}
+
+func createSensor(NAME string, LPP_DATA_TYPE int, HEXA int, DATA_SIZE int) *sensor {
+	s := sensor{
+		NAME:          NAME,
+		LPP_DATA_TYPE: LPP_DATA_TYPE,
+		HEXA:          HEXA,
+		DATA_SIZE:     DATA_SIZE,
+	}
+
+	return &s
+}
+
 func converter(data string) string {
 
 	encoded := base64.StdEncoding.EncodeToString([]byte(data)) // CONVERTING STRING TO BASE64
@@ -24,6 +42,24 @@ func converter(data string) string {
 // AHMAAAFnAAACaAA=
 
 func objectToJson(information string, finishingRoutine chan string) {
+
+	ILLUMINANCE_SENSOR := createSensor("Illuminance Sensor", 101, 65, 2)
+	PRESENCE_SENSOR := createSensor("Presence Sensor", 102, 66, 1)
+	TEMPERATURE_SENSOR := createSensor("Temperature Sensor", 103, 67, 2)
+	HUMIDITY_SENSOR := createSensor("Humidity Sensor", 104, 68, 1)
+	ACCELEROMETER_SENSOR := createSensor("Accelerometer Sensor", 113, 71, 6)
+	BAROMETER_SENSOR := createSensor("Barometer Sensor", 115, 73, 2)
+	GYROMETER_SENSOR := createSensor("Gyrometer Sensor", 134, 86, 6)
+	GPS_LOCATION_SENSOR := createSensor("GPS Location Sensor", 136, 88, 9)
+
+	fmt.Println(ILLUMINANCE_SENSOR)
+	fmt.Println(PRESENCE_SENSOR)
+	fmt.Println(TEMPERATURE_SENSOR)
+	fmt.Println(HUMIDITY_SENSOR)
+	fmt.Println(ACCELEROMETER_SENSOR)
+	fmt.Println(BAROMETER_SENSOR)
+	fmt.Println(GYROMETER_SENSOR)
+	fmt.Println(GPS_LOCATION_SENSOR)
 
 	if len(string(information)) == 0 {
 		fmt.Println("ERROR! Please verify your value")
@@ -180,7 +216,7 @@ func numOfBytes(sensor_type string) int {
 
 	switch sensor_type {
 	case "Iluminance":
-		return 2
+		return 9
 	case "Presence":
 		return 1
 	case "Temperature":
