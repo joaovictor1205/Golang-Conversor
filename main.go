@@ -11,16 +11,17 @@ import (
 func converter(data string) string {
 
 	encoded := base64.StdEncoding.EncodeToString([]byte(data)) // CONVERTING STRING TO BASE64
-
-	decoded, _ := base64.StdEncoding.DecodeString(encoded) // CONVERTING BASE64 TO STRING
-
+	decoded, _ := base64.StdEncoding.DecodeString(encoded)     // CONVERTING BASE64 TO STRING
 	b64, _ := base64.StdEncoding.DecodeString(string(decoded)) // CONVERTING STRING TO HEXADECIMAL
-
 	hexa := hex.EncodeToString(b64)
 
 	return hexa
 
 }
+
+// values to test:
+// AHMCbQFnAC0CaCQ=
+// AHMAAAFnAAACaAA=
 
 func objectToJson(information string, finishingRoutine chan string) {
 
@@ -29,7 +30,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 		os.Exit(-1)
 	}
 
-	var type_string_1 string
+	var type_sensor_1 string
 	var chanel_value_1 int
 	var sensor_value_1 string
 	var first_sensor_value float64
@@ -60,28 +61,19 @@ func objectToJson(information string, finishingRoutine chan string) {
 	position_18 := string(information[18])
 	position_19 := string(information[19])
 
-	for i := 0; i <= 3; i++ {
-		position_0 = string(information[0])
-		position_1 = string(information[1])
-		position_2 = string(information[2])
-		position_3 = string(information[3])
-	}
 	///////////////////////// FIRST SENSOR INFORMATION ///////////////////
-	chanel_value_1 = chanelValue(position_0, position_1)
-	type_string_1 = sensorType(position_2, position_3)
-	sensor_bytes = numOfBytes(type_string_1)
-	if sensor_bytes == 2 {
-		sensor_value_1 = string(information[4:8])
-		first_sensor_value = sensorConversion(sensor_value_1, type_string_1)
-	} else if sensor_bytes == 1 {
-		sensor_value_1 = string(information[4:6])
-		first_sensor_value = sensorConversion(sensor_value_1, type_string_1)
-	} else if sensor_bytes == 6 {
-		sensor_value_1 = string(information[4:16])
-		first_sensor_value = sensorConversion(sensor_value_1, type_string_1)
-	} else if sensor_bytes == 9 {
-		sensor_value_1 = string(information[4:22])
-		first_sensor_value = sensorConversion(sensor_value_1, type_string_1)
+	position_0 = string(information[0])                                  // FIRST POSITION
+	position_1 = string(information[1])                                  // SECOND POSITION
+	position_2 = string(information[2])                                  // THIRD POSITION
+	position_3 = string(information[3])                                  // FOURTH POSITION
+	chanel_value_1 = chanelValue(position_0, position_1)                 // WITH THE FIRST AND SECOND POSITION (1 BYTE) I CAN DEFINE THE FIRST CHANEL VALUE
+	type_sensor_1 = sensorType(position_2, position_3)                   // WITH THE THIRD AND FOURTH POSITION (1 BYTE) I CAN DEFINE THE FIRST SENSOR TYPE
+	sensor_bytes = numOfBytes(type_sensor_1)                             // THE SENSOR TYPE WILL DEFINE NUMBER OF BYTES TO BE READ
+	sensor_value_1 = bytesReading(sensor_bytes, information)             // WITH THIS FUNCTION I HAVE THE 'PIECE' OF THE INFORMATION THAT CONTAINS THE SENSOR VALUE
+	first_sensor_value = sensorConversion(sensor_value_1, type_sensor_1) // SO NOW, WITH THIS 'PIECE' I CAN TRANSLATE THE VALUE TO INT TO SHOW TO USER
+	if sensor_bytes == -1 {
+		fmt.Println("Error with Sensor")
+		os.Exit(-1)
 	}
 	//////////////////////////////////////////////////////////////////////
 
@@ -100,7 +92,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 	////////////////////////////////////////////////////////////////////
 
 	////////////// CREATING JSON WITH SENSOR INFORMATIONS //////////////
-	createJSON(chanel_value_1, type_string_1, first_sensor_value,
+	createJSON(chanel_value_1, type_sensor_1, first_sensor_value,
 		chanel_value_2, type_string_2, second_sensor_value,
 		chanel_value_3, type_string_3, third_sensor_value)
 	////////////////////////////////////////////////////////////////////
@@ -207,6 +199,22 @@ func numOfBytes(sensor_type string) int {
 		return -1
 	}
 
+}
+
+func bytesReading(sensor_bytes int, information string) string {
+
+	switch sensor_bytes {
+	case 1:
+		return string(information[4:6])
+	case 2:
+		return string(information[4:8])
+	case 6:
+		return string(information[4:16])
+	case 9:
+		return string(information[4:22])
+	default:
+		return "Err"
+	}
 }
 
 func createJSON(chanel_value_1 int, type_string_1 string, sensor_value_1 float64,
