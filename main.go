@@ -9,33 +9,35 @@ import (
 )
 
 type sensor struct {
-	NAME          string
-	LPP_DATA_TYPE int
-	HEXA          int
-	DATA_SIZE     int
+	NAME          			string
+	LPP_DATA_TYPE 			int
+	HEXA          			int
+	DATA_SIZE     			int
+	DATA_RESOLUTION_PER_BIT float64
 }
 
-func createSensor(NAME string, LPP_DATA_TYPE int, HEXA int, DATA_SIZE int) *sensor {
+func createSensor(NAME string, LPP_DATA_TYPE int, HEXA int, DATA_SIZE int, DATA_RESOLUTION_PER_BIT float64) *sensor {
 
 	s := sensor{
-		NAME:          NAME,
-		LPP_DATA_TYPE: LPP_DATA_TYPE,
-		HEXA:          HEXA,
-		DATA_SIZE:     DATA_SIZE,
+		NAME:          			NAME,
+		LPP_DATA_TYPE: 			LPP_DATA_TYPE,
+		HEXA:          			HEXA,
+		DATA_SIZE:     			DATA_SIZE,
+		DATA_RESOLUTION_PER_BIT: DATA_RESOLUTION_PER_BIT,
 	}
 
 	return &s
 
 }
 
-var ILLUMINANCE_SENSOR = createSensor("Illuminance Sensor", 101, 65, 2)
-var PRESENCE_SENSOR = createSensor("Presence Sensor", 102, 66, 1)
-var TEMPERATURE_SENSOR = createSensor("Temperature Sensor", 103, 67, 2)
-var HUMIDITY_SENSOR = createSensor("Humidity Sensor", 104, 68, 1)
-var ACCELEROMETER_SENSOR = createSensor("Accelerometer Sensor", 113, 71, 6)
-var BAROMETER_SENSOR = createSensor("Barometer Sensor", 115, 73, 2)
-var GYROMETER_SENSOR = createSensor("Gyrometer Sensor", 134, 86, 6)
-var GPS_LOCATION_SENSOR = createSensor("GPS Location Sensor", 136, 88, 9)
+var ILLUMINANCE_SENSOR = createSensor("Illuminance Sensor", 101, 65, 2, 1.0)
+var PRESENCE_SENSOR = createSensor("Presence Sensor", 102, 66, 1, 1.0)
+var TEMPERATURE_SENSOR = createSensor("Temperature Sensor", 103, 67, 2, 0.1)
+var HUMIDITY_SENSOR = createSensor("Humidity Sensor", 104, 68, 1, 0.5)
+var ACCELEROMETER_SENSOR = createSensor("Accelerometer Sensor", 113, 71, 6, 0.001)
+var BAROMETER_SENSOR = createSensor("Barometer Sensor", 115, 73, 2, 0.1)
+var GYROMETER_SENSOR = createSensor("Gyrometer Sensor", 134, 86, 6, 0.01)
+var GPS_LOCATION_SENSOR = createSensor("GPS Location Sensor", 136, 88, 9, 0.0001)
 
 func converter(data string) string {
 
@@ -152,21 +154,21 @@ func sensorType(first_parameter, second_parameter string) string {
 	}
 
 	switch type_string {
-	case 65:
+	case ILLUMINANCE_SENSOR.HEXA:
 		return ILLUMINANCE_SENSOR.NAME
-	case 66:
+	case PRESENCE_SENSOR.HEXA:
 		return PRESENCE_SENSOR.NAME
-	case 67:
+	case TEMPERATURE_SENSOR.HEXA:
 		return TEMPERATURE_SENSOR.NAME
-	case 68:
+	case HUMIDITY_SENSOR.HEXA:
 		return HUMIDITY_SENSOR.NAME
-	case 71:
+	case ACCELEROMETER_SENSOR.HEXA:
 		return ACCELEROMETER_SENSOR.NAME
-	case 73:
+	case BAROMETER_SENSOR.HEXA:
 		return BAROMETER_SENSOR.NAME
-	case 86:
+	case GYROMETER_SENSOR.HEXA:
 		return GYROMETER_SENSOR.NAME
-	case 88:
+	case GPS_LOCATION_SENSOR.HEXA:
 		return GPS_LOCATION_SENSOR.NAME
 	default:
 		return "Please verify your Sensor Type"
@@ -184,21 +186,21 @@ func sensorConversion(first_parameter string, sensor_type string) float64 {
 
 	switch sensor_type {
 	case ILLUMINANCE_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * 1
+		sensor_value = float64(int_value_1) * ILLUMINANCE_SENSOR.DATA_RESOLUTION_PER_BIT
 	case PRESENCE_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * 1
+		sensor_value = float64(int_value_1) * PRESENCE_SENSOR.DATA_RESOLUTION_PER_BIT
 	case TEMPERATURE_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * 0.1
+		sensor_value = float64(int_value_1) * TEMPERATURE_SENSOR.DATA_RESOLUTION_PER_BIT
 	case HUMIDITY_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * 0.5
+		sensor_value = float64(int_value_1) * HUMIDITY_SENSOR.DATA_RESOLUTION_PER_BIT
 	case ACCELEROMETER_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * 0.001
+		sensor_value = float64(int_value_1) * ACCELEROMETER_SENSOR.DATA_RESOLUTION_PER_BIT
 	case BAROMETER_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * 0.1
+		sensor_value = float64(int_value_1) * BAROMETER_SENSOR.DATA_RESOLUTION_PER_BIT
 	case GYROMETER_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * 0.01
+		sensor_value = float64(int_value_1) * GYROMETER_SENSOR.DATA_RESOLUTION_PER_BIT
 	case GPS_LOCATION_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * 0.0001
+		sensor_value = float64(int_value_1) * GPS_LOCATION_SENSOR.DATA_RESOLUTION_PER_BIT
 
 	}
 
@@ -209,21 +211,21 @@ func numOfBytes(sensor_type string) int {
 
 	switch sensor_type {
 	case ILLUMINANCE_SENSOR.NAME:
-		return 9
+		return ILLUMINANCE_SENSOR.DATA_SIZE
 	case PRESENCE_SENSOR.NAME:
-		return 1
+		return PRESENCE_SENSOR.DATA_SIZE
 	case TEMPERATURE_SENSOR.NAME:
-		return 2
+		return TEMPERATURE_SENSOR.DATA_SIZE
 	case HUMIDITY_SENSOR.NAME:
-		return 1
+		return HUMIDITY_SENSOR.DATA_SIZE
 	case ACCELEROMETER_SENSOR.NAME:
-		return 6
+		return ACCELEROMETER_SENSOR.DATA_SIZE
 	case BAROMETER_SENSOR.NAME:
-		return 2
+		return BAROMETER_SENSOR.DATA_SIZE
 	case GYROMETER_SENSOR.NAME:
-		return 6
+		return GYROMETER_SENSOR.DATA_SIZE
 	case GPS_LOCATION_SENSOR.NAME:
-		return 9
+		return GPS_LOCATION_SENSOR.DATA_SIZE
 	default:
 		return -1
 	}
