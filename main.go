@@ -153,21 +153,21 @@ func sensorType(first_parameter, second_parameter string) string {
 
 	switch type_string {
 	case 65:
-		return "Illuminance"
+		return ILLUMINANCE_SENSOR.NAME
 	case 66:
-		return "Presence"
+		return PRESENCE_SENSOR.NAME
 	case 67:
-		return "Temperature"
+		return TEMPERATURE_SENSOR.NAME
 	case 68:
-		return "Humidity"
+		return HUMIDITY_SENSOR.NAME
 	case 71:
-		return "Accelerometer"
+		return ACCELEROMETER_SENSOR.NAME
 	case 73:
-		return "Barometer"
+		return BAROMETER_SENSOR.NAME
 	case 86:
-		return "Gyrometer"
+		return GYROMETER_SENSOR.NAME
 	case 88:
-		return "GPS Location"
+		return GPS_LOCATION_SENSOR.NAME
 	default:
 		return "Please verify your Sensor Type"
 	}
@@ -183,21 +183,21 @@ func sensorConversion(first_parameter string, sensor_type string) float64 {
 	int_value_1, _ := strconv.ParseUint(string(hexa_to_string_1), 16, 32) // STRING FOR INT64
 
 	switch sensor_type {
-	case "Iluminance":
+	case ILLUMINANCE_SENSOR.NAME:
 		sensor_value = float64(int_value_1) * 1
-	case "Presence":
+	case PRESENCE_SENSOR.NAME:
 		sensor_value = float64(int_value_1) * 1
-	case "Temperature":
+	case TEMPERATURE_SENSOR.NAME:
 		sensor_value = float64(int_value_1) * 0.1
-	case "Humidity":
+	case HUMIDITY_SENSOR.NAME:
 		sensor_value = float64(int_value_1) * 0.5
-	case "Accelerometer":
+	case ACCELEROMETER_SENSOR.NAME:
 		sensor_value = float64(int_value_1) * 0.001
-	case "Barometer":
+	case BAROMETER_SENSOR.NAME:
 		sensor_value = float64(int_value_1) * 0.1
-	case "Gyrometer":
+	case GYROMETER_SENSOR.NAME:
 		sensor_value = float64(int_value_1) * 0.01
-	case "GPS Location":
+	case GPS_LOCATION_SENSOR.NAME:
 		sensor_value = float64(int_value_1) * 0.0001
 
 	}
@@ -208,21 +208,21 @@ func sensorConversion(first_parameter string, sensor_type string) float64 {
 func numOfBytes(sensor_type string) int {
 
 	switch sensor_type {
-	case "Iluminance":
+	case ILLUMINANCE_SENSOR.NAME:
 		return 9
-	case "Presence":
+	case PRESENCE_SENSOR.NAME:
 		return 1
-	case "Temperature":
+	case TEMPERATURE_SENSOR.NAME:
 		return 2
-	case "Humidity":
+	case HUMIDITY_SENSOR.NAME:
 		return 1
-	case "Accelerometer":
+	case ACCELEROMETER_SENSOR.NAME:
 		return 6
-	case "Barometer":
+	case BAROMETER_SENSOR.NAME:
 		return 2
-	case "Gyrometer":
+	case GYROMETER_SENSOR.NAME:
 		return 6
-	case "GPS Location":
+	case GPS_LOCATION_SENSOR.NAME:
 		return 9
 	default:
 		return -1
