@@ -180,27 +180,32 @@ func sensorConversion(first_parameter string, sensor_type string) float64 {
 
 	var sensor_value float64
 
-	sensor_hexa_value_1 := hex.EncodeToString([]byte(first_parameter))    // STRING FOR HEXA
-	hexa_to_string_1, _ := hex.DecodeString(sensor_hexa_value_1)          // HEXA FOR STRING
-	int_value_1, _ := strconv.ParseUint(string(hexa_to_string_1), 16, 32) // STRING FOR INT64
+	sensor_hexa_value := hex.EncodeToString([]byte(first_parameter))    // STRING FOR HEXA
+	hexa_to_string, err := hex.DecodeString(sensor_hexa_value)          // HEXA FOR STRING
+	int_value, err := strconv.ParseUint(string(hexa_to_string), 16, 32) // STRING FOR INT64
+
+	if err != nil {
+		fmt.Println("Error on Sensor value conversion")
+		os.Exit(-1)
+	}
 
 	switch sensor_type {
 	case ILLUMINANCE_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * ILLUMINANCE_SENSOR.DATA_RESOLUTION_PER_BIT
+		sensor_value = float64(int_value) * ILLUMINANCE_SENSOR.DATA_RESOLUTION_PER_BIT
 	case PRESENCE_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * PRESENCE_SENSOR.DATA_RESOLUTION_PER_BIT
+		sensor_value = float64(int_value) * PRESENCE_SENSOR.DATA_RESOLUTION_PER_BIT
 	case TEMPERATURE_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * TEMPERATURE_SENSOR.DATA_RESOLUTION_PER_BIT
+		sensor_value = float64(int_value) * TEMPERATURE_SENSOR.DATA_RESOLUTION_PER_BIT
 	case HUMIDITY_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * HUMIDITY_SENSOR.DATA_RESOLUTION_PER_BIT
+		sensor_value = float64(int_value) * HUMIDITY_SENSOR.DATA_RESOLUTION_PER_BIT
 	case ACCELEROMETER_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * ACCELEROMETER_SENSOR.DATA_RESOLUTION_PER_BIT
+		sensor_value = float64(int_value) * ACCELEROMETER_SENSOR.DATA_RESOLUTION_PER_BIT
 	case BAROMETER_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * BAROMETER_SENSOR.DATA_RESOLUTION_PER_BIT
+		sensor_value = float64(int_value) * BAROMETER_SENSOR.DATA_RESOLUTION_PER_BIT
 	case GYROMETER_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * GYROMETER_SENSOR.DATA_RESOLUTION_PER_BIT
+		sensor_value = float64(int_value) * GYROMETER_SENSOR.DATA_RESOLUTION_PER_BIT
 	case GPS_LOCATION_SENSOR.NAME:
-		sensor_value = float64(int_value_1) * GPS_LOCATION_SENSOR.DATA_RESOLUTION_PER_BIT
+		sensor_value = float64(int_value) * GPS_LOCATION_SENSOR.DATA_RESOLUTION_PER_BIT
 
 	}
 
