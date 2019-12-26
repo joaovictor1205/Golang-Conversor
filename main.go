@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type sensor struct {
@@ -107,7 +108,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 		os.Exit(-1)
 	}
 	//////////////////////////////////////////////////////////////////////
-
+	fmt.Println(strings.HasSuffix(information, sensor_value_1))			 // THIS FUNCTION RETURN TRUE IF THE SECOND PARAMETER IS THE FINAL OF THE STRING
 	////////////////////// SECOND SENSOR INFORMATION ////////////////////
 	chanel_value_2 = chanelValue(position_8, position_9)
 	type_string_2 = sensorType(position_10, position_11)
