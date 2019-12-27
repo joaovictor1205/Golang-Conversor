@@ -5,5 +5,5 @@ Golang Base64 to Hex converter and returns JSON
 go run main.go
 
 # PAYLOADS TO TEST
-AHMCbQFnAC0CaCQ=
+AHMCbQFnAC0CaCQ=  
 AHMAAAFnAAACaAA=
