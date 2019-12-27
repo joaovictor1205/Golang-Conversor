@@ -84,6 +84,8 @@ func objectToJson(information string, finishingRoutine chan string) {
 	var position_2 string
 	var position_3 string
 
+	var next_string_position int
+
 	position_8 := string(information[8])
 	position_9 := string(information[9])
 	position_10 := string(information[10])
@@ -108,7 +110,31 @@ func objectToJson(information string, finishingRoutine chan string) {
 		os.Exit(-1)
 	}
 	//////////////////////////////////////////////////////////////////////
-	fmt.Println(strings.HasSuffix(information, sensor_value_1))			 // THIS FUNCTION RETURN TRUE IF THE SECOND PARAMETER IS THE FINAL OF THE STRING
+
+	boolean_end_string := strings.HasSuffix(information, sensor_value_1) // THIS FUNCTION RETURN TRUE IF THE SECOND PARAMETER IS THE FINAL OF THE STRING
+	if boolean_end_string == true {
+		os.Exit(-1)
+	} else {
+		fmt.Println("test")
+	}
+	if sensor_bytes == 2 {
+		next_string_position = strings.Index(information, sensor_value_1) + 4 // THIS FUNCTION SHOWS THE POSITION OF THE SENSOR VALUE ON THE STRING INFORMATION
+		fmt.Println(next_string_position)
+	} else if sensor_bytes == 4 {
+		next_string_position = strings.Index(information, sensor_value_1) + 12
+	} else if sensor_bytes == 6 {
+		next_string_position = strings.Index(information, sensor_value_1) + 16
+	} else if sensor_bytes == 8 {
+		next_string_position = strings.Index(information, sensor_value_1) + 18
+	} else {
+		next_string_position = strings.Index(information, sensor_value_1) + 2
+	}
+
+	for i := 0; i < len(information); i++ {
+		fmt.Println("Index: ", string(information[i]))
+	}
+
+
 	////////////////////// SECOND SENSOR INFORMATION ////////////////////
 	chanel_value_2 = chanelValue(position_8, position_9)
 	type_string_2 = sensorType(position_10, position_11)
