@@ -86,8 +86,8 @@ func objectToJson(information string, finishingRoutine chan string) {
 
 	var next_string_position int
 
-	position_8 := string(information[8])
-	position_9 := string(information[9])
+	//position_8 := string(information[8])
+	//position_9 := string(information[9])
 	position_10 := string(information[10])
 	position_11 := string(information[11])
 	position_16 := string(information[16])
@@ -118,25 +118,23 @@ func objectToJson(information string, finishingRoutine chan string) {
 		fmt.Println("test")
 	}
 	if sensor_bytes == 2 {
-		next_string_position = strings.Index(information, sensor_value_1) + 4 // THIS FUNCTION SHOWS THE POSITION OF THE SENSOR VALUE ON THE STRING INFORMATION
+		next_string_position = strings.Index(information, sensor_value_1) + 5 // THIS FUNCTION SHOWS THE POSITION OF THE SENSOR VALUE ON THE STRING INFORMATION
 		fmt.Println(next_string_position)
 	} else if sensor_bytes == 4 {
-		next_string_position = strings.Index(information, sensor_value_1) + 12
+		next_string_position = strings.Index(information, sensor_value_1) + 13
 	} else if sensor_bytes == 6 {
-		next_string_position = strings.Index(information, sensor_value_1) + 16
+		next_string_position = strings.Index(information, sensor_value_1) + 17
 	} else if sensor_bytes == 8 {
-		next_string_position = strings.Index(information, sensor_value_1) + 18
+		next_string_position = strings.Index(information, sensor_value_1) + 19
 	} else {
-		next_string_position = strings.Index(information, sensor_value_1) + 2
+		next_string_position = strings.Index(information, sensor_value_1) + 3
 	}
 
-	for i := 0; i < len(information); i++ {
-		fmt.Println("Index: ", string(information[i]))
-	}
+	next_position := strconv.Itoa(next_string_position)
 
 
 	////////////////////// SECOND SENSOR INFORMATION ////////////////////
-	chanel_value_2 = chanelValue(position_8, position_9)
+	chanel_value_2 = chanelValue("0", next_position)
 	type_string_2 = sensorType(position_10, position_11)
 	sensor_value_2 = string(information[12:16])
 	second_sensor_value = sensorConversion(sensor_value_2, type_string_2)
