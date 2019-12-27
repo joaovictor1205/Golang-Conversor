@@ -110,8 +110,12 @@ func objectToJson(information string, finishingRoutine chan string) {
 		os.Exit(-1)
 	}
 	//////////////////////////////////////////////////////////////////////
-
-	boolean_end_string := strings.HasSuffix(information, sensor_value_1) // THIS FUNCTION RETURN TRUE IF THE SECOND PARAMETER IS THE FINAL OF THE STRING
+	
+	// WHEN WE FINISHED READING THE FIRST SENSOR INFORMATION (CHANEL VALUE + SENSOR TYPE + SENSOR VALUE)
+	// WE NEED TO KNOW IF WE HAVE MORE SENSORS ON THE PAYLOAD
+	// WITH THE HASSUFFIX FUNCTION WE KNOW IF THE SENSOR VALUE IS THE LAST THING ON THE STRING
+	// IF THE FIRST SENSOR VALUE ISN'T THE LAST THING ON THE STRING, WE NEED TO KEEP GOING THROUGH THE REST OF THE STRING
+	boolean_end_string := strings.HasSuffix(information, sensor_value_1)
 	if boolean_end_string == true {
 		os.Exit(-1)
 	} else {
