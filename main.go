@@ -134,11 +134,11 @@ func objectToJson(information string, finishingRoutine chan string) {
 		next_string_position = strings.Index(information, sensor_value_1) + 3
 	}
 
-	next_position := strconv.Itoa(next_string_position)
+	//next_position := strconv.Itoa(next_string_position)
 
 
 	////////////////////// SECOND SENSOR INFORMATION ////////////////////
-	chanel_value_2 = chanelValue("0", next_position)
+	chanel_value_2 = chanelValue("0", string(information[int(next_string_position)]))
 	type_string_2 = sensorType(position_10, position_11)
 	sensor_value_2 = string(information[12:16])
 	second_sensor_value = sensorConversion(sensor_value_2, type_string_2)
