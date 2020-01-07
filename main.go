@@ -10,20 +10,20 @@ import (
 )
 
 type sensor struct {
-	NAME          			string
-	LPP_DATA_TYPE 			int
-	HEXA          			int
-	DATA_SIZE     			int
+	NAME                    string
+	LPP_DATA_TYPE           int
+	HEXA                    int
+	DATA_SIZE               int
 	DATA_RESOLUTION_PER_BIT float64
 }
 
 func createSensor(NAME string, LPP_DATA_TYPE int, HEXA int, DATA_SIZE int, DATA_RESOLUTION_PER_BIT float64) *sensor {
 
 	s := sensor{
-		NAME:          			NAME,
-		LPP_DATA_TYPE: 			LPP_DATA_TYPE,
-		HEXA:          			HEXA,
-		DATA_SIZE:     			DATA_SIZE,
+		NAME:                    NAME,
+		LPP_DATA_TYPE:           LPP_DATA_TYPE,
+		HEXA:                    HEXA,
+		DATA_SIZE:               DATA_SIZE,
 		DATA_RESOLUTION_PER_BIT: DATA_RESOLUTION_PER_BIT,
 	}
 
@@ -110,7 +110,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 		os.Exit(-1)
 	}
 	//////////////////////////////////////////////////////////////////////
-	
+
 	// WHEN WE FINISHED READING THE FIRST SENSOR INFORMATION (CHANEL VALUE + SENSOR TYPE + SENSOR VALUE)
 	// WE NEED TO KNOW IF WE HAVE MORE SENSORS ON THE PAYLOAD
 	// WITH THE HASSUFFIX FUNCTION WE KNOW IF THE SENSOR VALUE IS THE LAST THING ON THE STRING
@@ -135,7 +135,6 @@ func objectToJson(information string, finishingRoutine chan string) {
 	}
 
 	//next_position := strconv.Itoa(next_string_position)
-
 
 	////////////////////// SECOND SENSOR INFORMATION ////////////////////
 	chanel_value_2 = chanelValue("0", string(information[int(next_string_position)]))
