@@ -122,7 +122,6 @@ func objectToJson(information string, finishingRoutine chan string) {
 	} else {
 		if sensor_bytes == 2 {
 			next_string_position = strings.Index(information, sensor_value_1) + 4 // THIS FUNCTION SHOWS THE POSITION OF THE SENSOR VALUE ON THE STRING INFORMATION
-			fmt.Println(next_string_position)
 		} else if sensor_bytes == 4 {
 			next_string_position = strings.Index(information, sensor_value_1) + 12
 		} else if sensor_bytes == 6 {
@@ -133,8 +132,6 @@ func objectToJson(information string, finishingRoutine chan string) {
 			next_string_position = strings.Index(information, sensor_value_1) + 2
 		}
 	}
-
-	//next_position := strconv.Itoa(next_string_position)
 
 	////////////////////// SECOND SENSOR INFORMATION ////////////////////
 	chanel_value_2 = chanelValue(string(information[int(next_string_position)]), string(information[int(next_string_position)+1]))
