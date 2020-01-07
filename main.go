@@ -120,20 +120,18 @@ func objectToJson(information string, finishingRoutine chan string) {
 		os.Exit(-1)
 		fmt.Println("Finishing Conversion!")
 	} else {
-		fmt.Println("...") // NOW WE KNOW THE PAYLOAD HAVE MORE SENSORS, SO WE NEED TO CONTINUE CONVERSION
-	}
-
-	if sensor_bytes == 2 {
-		next_string_position = strings.Index(information, sensor_value_1) + 4 // THIS FUNCTION SHOWS THE POSITION OF THE SENSOR VALUE ON THE STRING INFORMATION
-		fmt.Println(next_string_position)
-	} else if sensor_bytes == 4 {
-		next_string_position = strings.Index(information, sensor_value_1) + 12
-	} else if sensor_bytes == 6 {
-		next_string_position = strings.Index(information, sensor_value_1) + 16
-	} else if sensor_bytes == 8 {
-		next_string_position = strings.Index(information, sensor_value_1) + 18
-	} else {
-		next_string_position = strings.Index(information, sensor_value_1) + 2
+		if sensor_bytes == 2 {
+			next_string_position = strings.Index(information, sensor_value_1) + 4 // THIS FUNCTION SHOWS THE POSITION OF THE SENSOR VALUE ON THE STRING INFORMATION
+			fmt.Println(next_string_position)
+		} else if sensor_bytes == 4 {
+			next_string_position = strings.Index(information, sensor_value_1) + 12
+		} else if sensor_bytes == 6 {
+			next_string_position = strings.Index(information, sensor_value_1) + 16
+		} else if sensor_bytes == 8 {
+			next_string_position = strings.Index(information, sensor_value_1) + 18
+		} else {
+			next_string_position = strings.Index(information, sensor_value_1) + 2
+		}
 	}
 
 	//next_position := strconv.Itoa(next_string_position)
