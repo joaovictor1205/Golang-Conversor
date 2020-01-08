@@ -120,18 +120,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 		os.Exit(-1)
 		fmt.Println("Finishing Conversion!")
 	} else {
-		if sensor_bytes == 2 {
-			next_string_position = strings.Index(information, sensor_value_1) + 4 // THIS FUNCTION SHOWS THE POSITION OF THE SENSOR VALUE ON THE STRING INFORMATION
-			fmt.Println(next_string_position)
-		} else if sensor_bytes == 4 {
-			next_string_position = strings.Index(information, sensor_value_1) + 12
-		} else if sensor_bytes == 6 {
-			next_string_position = strings.Index(information, sensor_value_1) + 16
-		} else if sensor_bytes == 8 {
-			next_string_position = strings.Index(information, sensor_value_1) + 18
-		} else {
-			next_string_position = strings.Index(information, sensor_value_1) + 2
-		}
+		next_string_position = next_position(sensor_bytes, information, sensor_value_1)
 	}
 
 	////////////////////// SECOND SENSOR INFORMATION ////////////////////
@@ -276,6 +265,22 @@ func bytesReading(sensor_bytes int, information string) string {
 		return string(information[4:22])
 	default:
 		return "Err"
+	}
+}
+
+func next_position(sensor_bytes int, information string, sensor_value string) int {
+
+	switch sensor_bytes {
+	case 2:
+		return strings.Index(information, sensor_value) + 4
+	case 4:
+		return strings.Index(information, sensor_value) + 12
+	case 6:
+		return strings.Index(information, sensor_value) + 16
+	case 8:
+		return strings.Index(information, sensor_value) + 18
+	default:
+		return strings.Index(information, sensor_value) + 2
 	}
 }
 
