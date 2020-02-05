@@ -127,9 +127,16 @@ func objectToJson(information string, finishingRoutine chan string) {
 	chanel_value_2 = chanelValue(string(information[int(next_string_position)]), string(information[int(next_string_position)+1]))
 	type_sensor_2 = sensorType(string(information[int(next_string_position)+2]), string(information[int(next_string_position)+3]))
 	sensor_bytes = numOfBytes(type_sensor_2)
-	sensor_value_2 = string(information[int(next_string_position)+4 : int(next_string_position)+8])
+	sensor_value_2 = bytesReading(sensor_bytes, information, 12)
 	second_sensor_value = sensorConversion(sensor_value_2, type_sensor_2)
 	////////////////////////////////////////////////////////////////////
+	finishing_reading = strings.HasSuffix(information, sensor_value_2)
+	if finishing_reading == true {
+		os.Exit(-1)
+		fmt.Println("Finishing Conversion!")
+	} else {
+		next_string_position = next_position(sensor_bytes, information, sensor_value_2)
+	}
 
 	////////////////// THIRDY SENSOR INFORMATION ///////////////////////
 	chanel_value_3 = chanelValue(position_16, position_17)
