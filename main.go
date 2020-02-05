@@ -88,8 +88,8 @@ func objectToJson(information string, finishingRoutine chan string) {
 
 	//position_8 := string(information[8])
 	//position_9 := string(information[9])
-	position_10 := string(information[10])
-	position_11 := string(information[11])
+	//position_10 := string(information[10])
+	//position_11 := string(information[11])
 	position_16 := string(information[16])
 	position_17 := string(information[17])
 	position_18 := string(information[18])
@@ -125,7 +125,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 
 	////////////////////// SECOND SENSOR INFORMATION ////////////////////
 	chanel_value_2 = chanelValue(string(information[int(next_string_position)]), string(information[int(next_string_position)+1]))
-	type_string_2 = sensorType(position_10, position_11)
+	type_string_2 = sensorType(string(information[int(next_string_position)+2]), string(information[int(next_string_position)+3]))
 	sensor_value_2 = string(information[12:16])
 	second_sensor_value = sensorConversion(sensor_value_2, type_string_2)
 	////////////////////////////////////////////////////////////////////
