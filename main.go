@@ -127,7 +127,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 	chanel_value_2 = chanelValue(string(information[int(next_string_position)]), string(information[int(next_string_position)+1]))
 	type_sensor_2 = sensorType(string(information[int(next_string_position)+2]), string(information[int(next_string_position)+3]))
 	sensor_bytes = numOfBytes(type_sensor_2)
-	sensor_value_2 = string(information[12:16])
+	sensor_value_2 = string(information[int(next_string_position)+4 : int(next_string_position)+8])
 	second_sensor_value = sensorConversion(sensor_value_2, type_sensor_2)
 	////////////////////////////////////////////////////////////////////
 
