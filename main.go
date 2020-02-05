@@ -86,10 +86,6 @@ func objectToJson(information string, finishingRoutine chan string) {
 
 	var next_string_position int
 
-	//position_8 := string(information[8])
-	//position_9 := string(information[9])
-	//position_10 := string(information[10])
-	//position_11 := string(information[11])
 	position_16 := string(information[16])
 	position_17 := string(information[17])
 	position_18 := string(information[18])
@@ -111,10 +107,6 @@ func objectToJson(information string, finishingRoutine chan string) {
 	}
 	//////////////////////////////////////////////////////////////////////
 
-	// WHEN WE FINISHED READING THE FIRST SENSOR INFORMATION (CHANEL VALUE + SENSOR TYPE + SENSOR VALUE)
-	// WE NEED TO KNOW IF WE HAVE MORE SENSORS ON THE PAYLOAD
-	// WITH THE HASSUFFIX FUNCTION WE KNOW IF THE SENSOR VALUE IS THE LAST THING ON THE STRING
-	// IF THE FIRST SENSOR VALUE ISN'T THE LAST THING ON THE STRING, WE NEED TO KEEP GOING THROUGH THE REST OF THE STRING
 	finishing_reading := strings.HasSuffix(information, sensor_value_1)
 	if finishing_reading == true {
 		os.Exit(-1)
