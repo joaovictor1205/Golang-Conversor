@@ -67,7 +67,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 	var sensor_value_1 string
 	var first_sensor_value float64
 
-	var type_string_2 string
+	var type_sensor_2 string
 	var chanel_value_2 int
 	var sensor_value_2 string
 	var second_sensor_value float64
@@ -103,7 +103,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 	chanel_value_1 = chanelValue(position_0, position_1)                 // WITH THE FIRST AND SECOND POSITION (1 BYTE) I CAN DEFINE THE FIRST CHANEL VALUE
 	type_sensor_1 = sensorType(position_2, position_3)                   // WITH THE THIRD AND FOURTH POSITION (1 BYTE) I CAN DEFINE THE FIRST SENSOR TYPE
 	sensor_bytes = numOfBytes(type_sensor_1)                             // THE SENSOR TYPE WILL DEFINE NUMBER OF BYTES TO BE READ
-	sensor_value_1 = bytesReading(sensor_bytes, information)             // WITH THIS FUNCTION I HAVE THE 'PIECE' OF THE INFORMATION THAT CONTAINS THE SENSOR VALUE
+	sensor_value_1 = bytesReading(sensor_bytes, information, 4)          // WITH THIS FUNCTION I HAVE THE 'PIECE' OF THE INFORMATION THAT CONTAINS THE SENSOR VALUE
 	first_sensor_value = sensorConversion(sensor_value_1, type_sensor_1) // SO NOW, WITH THIS 'PIECE' I CAN TRANSLATE THE VALUE TO INT TO SHOW TO USER
 	if sensor_bytes == -1 {
 		fmt.Println("Error with Sensor")
@@ -115,8 +115,8 @@ func objectToJson(information string, finishingRoutine chan string) {
 	// WE NEED TO KNOW IF WE HAVE MORE SENSORS ON THE PAYLOAD
 	// WITH THE HASSUFFIX FUNCTION WE KNOW IF THE SENSOR VALUE IS THE LAST THING ON THE STRING
 	// IF THE FIRST SENSOR VALUE ISN'T THE LAST THING ON THE STRING, WE NEED TO KEEP GOING THROUGH THE REST OF THE STRING
-	boolean_end_string := strings.HasSuffix(information, sensor_value_1)
-	if boolean_end_string == true {
+	finishing_reading := strings.HasSuffix(information, sensor_value_1)
+	if finishing_reading == true {
 		os.Exit(-1)
 		fmt.Println("Finishing Conversion!")
 	} else {
@@ -125,9 +125,10 @@ func objectToJson(information string, finishingRoutine chan string) {
 
 	////////////////////// SECOND SENSOR INFORMATION ////////////////////
 	chanel_value_2 = chanelValue(string(information[int(next_string_position)]), string(information[int(next_string_position)+1]))
-	type_string_2 = sensorType(string(information[int(next_string_position)+2]), string(information[int(next_string_position)+3]))
+	type_sensor_2 = sensorType(string(information[int(next_string_position)+2]), string(information[int(next_string_position)+3]))
+	sensor_bytes = numOfBytes(type_sensor_2)
 	sensor_value_2 = string(information[12:16])
-	second_sensor_value = sensorConversion(sensor_value_2, type_string_2)
+	second_sensor_value = sensorConversion(sensor_value_2, type_sensor_2)
 	////////////////////////////////////////////////////////////////////
 
 	////////////////// THIRDY SENSOR INFORMATION ///////////////////////
@@ -139,7 +140,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 
 	////////////// CREATING JSON WITH SENSOR INFORMATIONS //////////////
 	createJSON(chanel_value_1, type_sensor_1, first_sensor_value,
-		chanel_value_2, type_string_2, second_sensor_value,
+		chanel_value_2, type_sensor_2, second_sensor_value,
 		chanel_value_3, type_string_3, third_sensor_value)
 	////////////////////////////////////////////////////////////////////
 
@@ -252,17 +253,19 @@ func numOfBytes(sensor_type string) int {
 
 }
 
-func bytesReading(sensor_bytes int, information string) string {
+func bytesReading(sensor_bytes int, information string, actual_position int) string {
+
+	last_position := actual_position + sensor_bytes + 2
 
 	switch sensor_bytes {
 	case 1:
-		return string(information[4:6])
+		return string(information[actual_position:last_position])
 	case 2:
-		return string(information[4:8])
+		return string(information[actual_position:last_position])
 	case 6:
-		return string(information[4:16])
+		return string(information[actual_position:last_position])
 	case 9:
-		return string(information[4:22])
+		return string(information[actual_position:last_position])
 	default:
 		return "Err"
 	}
