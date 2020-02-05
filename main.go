@@ -86,6 +86,8 @@ func objectToJson(information string, finishingRoutine chan string) {
 
 	var next_string_position int
 
+	var finishing_reading bool
+
 	position_16 := string(information[16])
 	position_17 := string(information[17])
 	position_18 := string(information[18])
@@ -107,7 +109,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 	}
 	//////////////////////////////////////////////////////////////////////
 
-	finishing_reading := strings.HasSuffix(information, sensor_value_1)
+	finishing_reading = strings.HasSuffix(information, sensor_value_1)
 	if finishing_reading == true {
 		os.Exit(-1)
 		fmt.Println("Finishing Conversion!")
