@@ -106,6 +106,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 		next_string_position = next_position(sensor_bytes, information, sensor_value_1)
 
 		for i := 0; finishing_reading != true; i++ {
+
 			chanel_value = chanelValue(string(information[int(next_string_position)]), string(information[int(next_string_position)+1]))
 			type_sensor = sensorType(string(information[int(next_string_position)+2]), string(information[int(next_string_position)+3]))
 			sensor_bytes = numOfBytes(type_sensor)
@@ -236,17 +237,15 @@ func numOfBytes(sensor_type string) int {
 
 func bytesReading(sensor_bytes int, information string, actual_position int) string {
 
-	last_position := actual_position + sensor_bytes + 2
-
 	switch sensor_bytes {
 	case 1:
 		return string(information[actual_position : actual_position+sensor_bytes+1])
 	case 2:
 		return string(information[actual_position : actual_position+sensor_bytes+2])
 	case 6:
-		return string(information[actual_position:last_position])
+		return string(information[actual_position : actual_position+sensor_bytes+6])
 	case 9:
-		return string(information[actual_position:last_position])
+		return string(information[actual_position : actual_position+sensor_bytes+9])
 	default:
 		return "Err"
 	}
