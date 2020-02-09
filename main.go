@@ -111,20 +111,21 @@ func objectToJson(information string, finishingRoutine chan string) {
 	finishing_reading = strings.HasSuffix(information, sensor_value_1)
 	if finishing_reading == true {
 		os.Exit(-1)
-		finishingRoutine <- "Finishing Go Routine"
+		fmt.Println("Finishing Go Routine")
 	} else {
 		next_string_position = next_position(sensor_bytes, information, sensor_value_1)
+
 		for i := 0; finishing_reading != true; i++ {
 			test_chanel_value := chanelValue(string(information[int(next_string_position)]), string(information[int(next_string_position)+1]))
 			test_sensor_2 := sensorType(string(information[int(next_string_position)+2]), string(information[int(next_string_position)+3]))
 			test_sensor_bytes := numOfBytes(test_sensor_2)
 			test_sensor_value := bytesReading(test_sensor_bytes, information, next_string_position+4)
 			fmt.Println(test_chanel_value, test_sensor_2, test_sensor_value)
-
 			finishing_reading = strings.HasSuffix(information, test_sensor_value)
+
 			if finishing_reading == true {
+				fmt.Println("Finishing Go Routine")
 				os.Exit(-1)
-				finishingRoutine <- "Finishing Go Routine"
 			} else {
 				next_string_position = next_position(sensor_bytes, information, test_sensor_value)
 				continue
