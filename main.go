@@ -127,6 +127,9 @@ func objectToJson(information string, finishingRoutine chan string) {
 				break
 			} else {
 				next_string_position = next_position(sensor_bytes, information, sensor_value)
+				if sensor_value == sensor_value_1 {
+					next_string_position += next_position(sensor_bytes, information, sensor_value)
+				}
 				continue
 			}
 		}
