@@ -46,6 +46,7 @@ func converter(data string) string {
 	decoded, _ := base64.StdEncoding.DecodeString(encoded)     // CONVERTING BASE64 TO STRING
 	b64, _ := base64.StdEncoding.DecodeString(string(decoded)) // CONVERTING STRING TO HEXADECIMAL
 	hexa := hex.EncodeToString(b64)
+
 	return hexa
 
 }
