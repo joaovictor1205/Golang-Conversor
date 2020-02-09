@@ -66,17 +66,11 @@ func objectToJson(information string, finishingRoutine chan string) {
 	var sensor_value_1 string
 	var first_sensor_value float64
 
-	var type_sensor_2 string
-	var chanel_value_2 int
-	var sensor_value_2 string
-	var second_sensor_value float64
-
-	var type_string_3 string
-	var chanel_value_3 int
-	var sensor_value_3 string
-	var third_sensor_value float64
-
+	var chanel_value int
+	var type_sensor string
 	var sensor_bytes int
+	var sensor_value string
+	var conversion_sensor float64
 
 	var position_0 string
 	var position_1 string
@@ -86,11 +80,6 @@ func objectToJson(information string, finishingRoutine chan string) {
 	var next_string_position int
 
 	var finishing_reading bool
-
-	position_16 := string(information[16])
-	position_17 := string(information[17])
-	position_18 := string(information[18])
-	position_19 := string(information[19])
 
 	///////////////////////// FIRST SENSOR INFORMATION ///////////////////
 	position_0 = string(information[0])                                  // FIRST POSITION
@@ -106,6 +95,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 		fmt.Println("Error with Sensor")
 		os.Exit(-1)
 	}
+	fmt.Println(chanel_value_1, type_sensor_1, first_sensor_value)
 	//////////////////////////////////////////////////////////////////////
 
 	finishing_reading = strings.HasSuffix(information, sensor_value_1)
@@ -116,50 +106,24 @@ func objectToJson(information string, finishingRoutine chan string) {
 		next_string_position = next_position(sensor_bytes, information, sensor_value_1)
 
 		for i := 0; finishing_reading != true; i++ {
-			test_chanel_value := chanelValue(string(information[int(next_string_position)]), string(information[int(next_string_position)+1]))
-			test_sensor_2 := sensorType(string(information[int(next_string_position)+2]), string(information[int(next_string_position)+3]))
-			test_sensor_bytes := numOfBytes(test_sensor_2)
-			test_sensor_value := bytesReading(test_sensor_bytes, information, next_string_position+4)
-			fmt.Println(test_chanel_value, test_sensor_2, test_sensor_value)
-			finishing_reading = strings.HasSuffix(information, test_sensor_value)
+			chanel_value = chanelValue(string(information[int(next_string_position)]), string(information[int(next_string_position)+1]))
+			type_sensor = sensorType(string(information[int(next_string_position)+2]), string(information[int(next_string_position)+3]))
+			sensor_bytes = numOfBytes(type_sensor)
+			sensor_value = bytesReading(sensor_bytes, information, next_string_position+4)
+			conversion_sensor = sensorConversion(sensor_value, type_sensor)
+
+			fmt.Println(chanel_value, type_sensor, conversion_sensor)
+
+			finishing_reading = strings.HasSuffix(information, sensor_value)
 
 			if finishing_reading == true {
-				fmt.Println("Finishing Go Routine")
-				os.Exit(-1)
+				break
 			} else {
-				next_string_position = next_position(sensor_bytes, information, test_sensor_value)
+				next_string_position = next_position(sensor_bytes, information, sensor_value)
 				continue
 			}
 		}
 	}
-
-	////////////////////// SECOND SENSOR INFORMATION ////////////////////
-	chanel_value_2 = chanelValue(string(information[int(next_string_position)]), string(information[int(next_string_position)+1]))
-	type_sensor_2 = sensorType(string(information[int(next_string_position)+2]), string(information[int(next_string_position)+3]))
-	sensor_bytes = numOfBytes(type_sensor_2)
-	sensor_value_2 = bytesReading(sensor_bytes, information, 12)
-	second_sensor_value = sensorConversion(sensor_value_2, type_sensor_2)
-	////////////////////////////////////////////////////////////////////
-	finishing_reading = strings.HasSuffix(information, sensor_value_2)
-	if finishing_reading == true {
-		os.Exit(-1)
-		fmt.Println("Finishing Conversion!")
-	} else {
-		next_string_position = next_position(sensor_bytes, information, sensor_value_2)
-	}
-
-	////////////////// THIRDY SENSOR INFORMATION ///////////////////////
-	chanel_value_3 = chanelValue(position_16, position_17)
-	type_string_3 = sensorType(position_18, position_19)
-	sensor_value_3 = string(information[20:22])
-	third_sensor_value = sensorConversion(sensor_value_3, type_string_3)
-	////////////////////////////////////////////////////////////////////
-
-	////////////// CREATING JSON WITH SENSOR INFORMATIONS //////////////
-	createJSON(chanel_value_1, type_sensor_1, first_sensor_value,
-		chanel_value_2, type_sensor_2, second_sensor_value,
-		chanel_value_3, type_string_3, third_sensor_value)
-	////////////////////////////////////////////////////////////////////
 
 	finishingRoutine <- "Finishing Go Routine"
 
@@ -302,21 +266,6 @@ func next_position(sensor_bytes int, information string, sensor_value string) in
 	default:
 		return strings.Index(information, sensor_value) + 2
 	}
-}
-
-func createJSON(chanel_value_1 int, type_string_1 string, sensor_value_1 float64,
-	chanel_value_2 int, type_string_2 string, sensor_value_2 float64,
-	chanel_value_3 int, type_string_3 string, sensor_value_3 float64) {
-
-	fmt.Println("[")
-	fmt.Printf(`{"Chanel One"`+": "+"%d,\n"+`"Sensor One Type"`+": "+`"`+"%s"+`"`+",\n"+`"Sensor One Value"`+": "+"%.1f}\n", chanel_value_1, type_string_1, sensor_value_1)
-	fmt.Print(",")
-	fmt.Print("\n")
-	fmt.Printf(`{"Chanel Two"`+": "+"%d,\n"+`"Sensor Two Type"`+": "+`"`+"%s"+`"`+",\n"+`"Sensor Two Value"`+": "+"%.1f}\n", chanel_value_2, type_string_2, sensor_value_2)
-	fmt.Print(",")
-	fmt.Print("\n")
-	fmt.Printf(`{"Chanel Three"`+": "+"%d,\n"+`"Sensor Three Type"`+": "+`"`+"%s"+`"`+",\n"+`"Sensor Three Value"`+": "+"%.1f}\n", chanel_value_3, type_string_3, sensor_value_3)
-	fmt.Println("]")
 }
 
 func main() {
