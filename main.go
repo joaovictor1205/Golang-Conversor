@@ -46,7 +46,6 @@ func converter(data string) string {
 	decoded, _ := base64.StdEncoding.DecodeString(encoded)     // CONVERTING BASE64 TO STRING
 	b64, _ := base64.StdEncoding.DecodeString(string(decoded)) // CONVERTING STRING TO HEXADECIMAL
 	hexa := hex.EncodeToString(b64)
-
 	return hexa
 
 }
@@ -276,9 +275,9 @@ func bytesReading(sensor_bytes int, information string, actual_position int) str
 
 	switch sensor_bytes {
 	case 1:
-		return string(information[actual_position:last_position])
+		return string(information[actual_position : actual_position+sensor_bytes+1])
 	case 2:
-		return string(information[actual_position:last_position])
+		return string(information[actual_position : actual_position+sensor_bytes+2])
 	case 6:
 		return string(information[actual_position:last_position])
 	case 9:
