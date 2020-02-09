@@ -42,10 +42,15 @@ var GPS_LOCATION_SENSOR = createSensor("GPS Location Sensor", 136, 88, 9, 0.0001
 
 func converter(data string) string {
 
-	encoded := base64.StdEncoding.EncodeToString([]byte(data)) // CONVERTING STRING TO BASE64
-	decoded, _ := base64.StdEncoding.DecodeString(encoded)     // CONVERTING BASE64 TO STRING
-	b64, _ := base64.StdEncoding.DecodeString(string(decoded)) // CONVERTING STRING TO HEXADECIMAL
+	encoded := base64.StdEncoding.EncodeToString([]byte(data))   // CONVERTING STRING TO BASE64
+	decoded, err := base64.StdEncoding.DecodeString(encoded)     // CONVERTING BASE64 TO STRING
+	b64, err := base64.StdEncoding.DecodeString(string(decoded)) // CONVERTING STRING TO HEXADECIMAL
 	hexa := hex.EncodeToString(b64)
+
+	if err != nil {
+		fmt.Println("Error with payload")
+		os.Exit(-1)
+	}
 
 	return hexa
 
