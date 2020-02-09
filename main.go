@@ -86,6 +86,7 @@ func objectToJson(information string, finishingRoutine chan string) {
 	var next_string_position int
 
 	var finishing_reading bool
+	var end_of_reading int
 
 	///////////////////////// FIRST SENSOR INFORMATION ///////////////////
 	position_0 = string(information[0])                                  // FIRST POSITION
@@ -104,10 +105,11 @@ func objectToJson(information string, finishingRoutine chan string) {
 	fmt.Println(chanel_value_1, type_sensor_1, first_sensor_value)
 	//////////////////////////////////////////////////////////////////////
 
-	finishing_reading = strings.HasSuffix(information, sensor_value_1)
-	if finishing_reading == true {
-		os.Exit(-1)
+	end_of_reading = strings.Index(information, sensor_value_1)
+	end_of_reading = end_of_reading + 1
+	if end_of_reading == 1 {
 		fmt.Println("Finishing Go Routine")
+		os.Exit(0)
 	} else {
 		next_string_position = next_position(sensor_bytes, information, sensor_value_1)
 
