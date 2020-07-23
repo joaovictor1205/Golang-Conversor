@@ -1,4 +1,4 @@
-# TCC
+#
 Golang Base64 to Hex converter and returns JSON
 
 # TO RUN
